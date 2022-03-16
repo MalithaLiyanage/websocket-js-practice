@@ -10,10 +10,18 @@ app.use(express.static('public'));
 
 const io = socket(server);
 
-io.on('connection', () => {
-    console.log('Connection socket made', socket)
+io.on('connection', (socket) => {
 
-    socket.on('chat', (data) => {
+    console.log('made socket connection', socket.id);
+
+    // Handle chat event
+    socket.on('chat', function(data){
         io.sockets.emit('chat', data);
-    })
-})
+    });
+
+    // Handle typing event
+    socket.on('typing', function(data){
+        socket.broadcast.emit('typing', data);
+    });
+
+});
